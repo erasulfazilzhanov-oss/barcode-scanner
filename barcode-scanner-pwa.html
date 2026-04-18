@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Сканер">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#00ff88">
+<title>Barcode Check</title>
+
+<!-- Apple Touch Icons (inline base64) -->
+<link rel="apple-touch-icon" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAEQklEQVR4nO3dvZJTVxSE0TsuR+KFHREQ8cKQ4hxX2aPb56fP9VqxqJJ6fzXAjAQfr9frgrv+2P0EOJuAiAiIiICICIiIgIgIiIiAiAiIiICICIiIgIgIiIiAiPy5+wm84eePr7ufwiKvL992P4XPOuYr0P+nnuuoF3tGQAcNOsopL/mAgE6ZcrgjXnh7QEeMOE//y68OqH++BcpH6A2ofLiVmqcoDah5si1qB2kMqHasvTpnqQuoc6YSheN0BVQ4UJu2iYoCapumVtVQLQFVjdKvZ66KgHrmOEjJaPsDKhniRA3TbQ6oYYKjbR9wZ0DbX/wz7J1xW0DqGWjjmHsCUs9wuybdEJB6Jtky7OqA1DPV+nmXBqSeBRaPvC4g9SyzcupFAalnsWWDrwhIPVusmX16QOrZaMH4cwNSz3azTzAxIPWUmHqIWQGpp8q8c0wJSD2FJh1lfEDqqTXjNIMDUk+54QcaGZB6jjD2TMMCUs9BBh5rTEDqOc6okw0ISD2HGnK4NCD1HC0/XxSQeh4gPOL9gNTzGMkpbwaknoe5fdA7Aannke6d9e2A1PNgN477XkDqebx3T7z/H1fgaLv/r4yPv957/K/v7/3y/3z8bw/4p+3P8N8fv5uvQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQ+Xq/X5x/988fXeU+FEq8v3z7/YF+BiLwX0FttcqJ3T/z2VyANPdiN4975LUxDj3TvrDf/DKShh7l90Pt/iNbQYySnjP4WpqEHCI+Y/jVeQ0fLzzfg+0AaOtSQw435RqKGjjPqZMO+E62hgww81sgfZWjoCGPPNPhnYRoqN/xA43+YqqFaM04z5afxGio06Siz3s6hoSrzzjHx/UAaKjH1EHPfUKah7WafYPo7EjW00YLxV7ylVUNbrJl90XuiNbTYssHXvaleQ8usnHrppzI0tMDikVd/rEdDU62fd8PnwjQ0yZZh93ywUEPD7Zp02ydTNTTQxjF3frRZQ0PsnXHzZ+M1FNo+4P5/XGH7BOdqmG5/QFfHEMcpGa0ioKtmjlP0zNUS0NU0SrmqoYoCusqm6dQ2UVdAV99AVQrHqQvoqpypQecsjQFdrWNtVDtIaUBX8WTrNU/RG9DVPdwy5SNUB3TVzzdb/8tvD+g6YcRJjnjhBwR0HTLlWKe85DMCus4ZdIiDXux7/1cG/OaYr0B0EhARAREREBEBEREQEQERERARAREREBEBEREQEQERERCRvwEHXA/rVjHhMgAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAEQklEQVR4nO3dvZJTVxSE0TsuR+KFHREQ8cKQ4hxX2aPb56fP9VqxqJJ6fzXAjAQfr9frgrv+2P0EOJuAiAiIiICICIiIgIgIiIiAiAiIiICICIiIgIgIiIiAiPy5+wm84eePr7ufwiKvL992P4XPOuYr0P+nnuuoF3tGQAcNOsopL/mAgE6ZcrgjXnh7QEeMOE//y68OqH++BcpH6A2ofLiVmqcoDah5si1qB2kMqHasvTpnqQuoc6YSheN0BVQ4UJu2iYoCapumVtVQLQFVjdKvZ66KgHrmOEjJaPsDKhniRA3TbQ6oYYKjbR9wZ0DbX/wz7J1xW0DqGWjjmHsCUs9wuybdEJB6Jtky7OqA1DPV+nmXBqSeBRaPvC4g9SyzcupFAalnsWWDrwhIPVusmX16QOrZaMH4cwNSz3azTzAxIPWUmHqIWQGpp8q8c0wJSD2FJh1lfEDqqTXjNIMDUk+54QcaGZB6jjD2TMMCUs9BBh5rTEDqOc6okw0ISD2HGnK4NCD1HC0/XxSQeh4gPOL9gNTzGMkpbwaknoe5fdA7Aannke6d9e2A1PNgN477XkDqebx3T7z/H1fgaLv/r4yPv957/K/v7/3y/3z8bw/4p+3P8N8fv5uvQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQERERARAREREBEBEREQEQ+Xq/X5x/988fXeU+FEq8v3z7/YF+BiLwX0FttcqJ3T/z2VyANPdiN4975LUxDj3TvrDf/DKShh7l90Pt/iNbQYySnjP4WpqEHCI+Y/jVeQ0fLzzfg+0AaOtSQw435RqKGjjPqZMO+E62hgww81sgfZWjoCGPPNPhnYRoqN/xA43+YqqFaM04z5afxGio06Siz3s6hoSrzzjHx/UAaKjH1EHPfUKah7WafYPo7EjW00YLxV7ylVUNbrJl90XuiNbTYssHXvaleQ8usnHrppzI0tMDikVd/rEdDU62fd8PnwjQ0yZZh93ywUEPD7Zp02ydTNTTQxjF3frRZQ0PsnXHzZ+M1FNo+4P5/XGH7BOdqmG5/QFfHEMcpGa0ioKtmjlP0zNUS0NU0SrmqoYoCusqm6dQ2UVdAV99AVQrHqQvoqpypQecsjQFdrWNtVDtIaUBX8WTrNU/RG9DVPdwy5SNUB3TVzzdb/8tvD+g6YcRJjnjhBwR0HTLlWKe85DMCus4ZdIiDXux7/1cG/OaYr0B0EhARAREREBEBEREQEQERERARAREREBEBEREQEQERERCRvwEHXA/rVjHhMgAAAABJRU5ErkJggg==">
+
+<!-- PWA Manifest inline -->
+<script>
+const manifestData = {
+  name: "Barcode Check",
+  short_name: "Сканер",
+  description: "Сканер штрих-кодов со скидками",
+  start_url: "./",
+  display: "standalone",
+  background_color: "#0a0a0a",
+  theme_color: "#00ff88",
+  orientation: "portrait"
+};
+const blob = new Blob([JSON.stringify(manifestData)], {type:'application/json'});
+const murl = URL.createObjectURL(blob);
+const link = document.createElement('link');
+link.rel = 'manifest'; link.href = murl;
+document.head.appendChild(link);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --border: #252525;
+  --green: #00ff88;
+  --red: #ff3355;
+  --yellow: #ffd600;
+  --text: #f0f0f0;
+  --muted: #555;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── HEADER ── */
+.header {
+  padding: calc(var(--safe-top) + 14px) 20px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo-box {
+  width: 36px; height: 36px; flex-shrink: 0;
+  background: var(--green);
+  clip-path: polygon(12% 0%,88% 0%,100% 12%,100% 88%,88% 100%,12% 100%,0% 88%,0% 12%);
+  display: flex; align-items: center; justify-content: center;
+}
+.logo-box svg { color: #000; }
+.header h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem; letter-spacing: 2px; color: var(--green);
+}
+.db-badge {
+  margin-left: auto;
+  background: #1a1a1a; border: 1px solid var(--border);
+  padding: 4px 10px; font-size: 0.62rem;
+  color: var(--muted); letter-spacing: 1px;
+  white-space: nowrap;
+}
+#db-count { color: var(--yellow); font-weight: 600; }
+
+/* ── INSTALL BANNER ── */
+#install-banner {
+  display: none;
+  background: #0d2e1e; border-bottom: 1px solid var(--green);
+  padding: 10px 16px; font-size: 0.72rem;
+  color: var(--green); text-align: center; letter-spacing: .5px;
+}
+
+/* ── SCROLL BODY ── */
+.body-scroll { overflow-y: auto; padding-bottom: calc(var(--safe-bot) + 30px); }
+
+/* ── UPLOAD ── */
+.upload-zone {
+  margin: 16px; border: 1.5px dashed var(--border);
+  background: var(--surface); padding: 18px 16px;
+  text-align: center; position: relative;
+  transition: border-color .2s;
+  cursor: pointer;
+}
+.upload-zone.loaded { border-color: var(--green); }
+.upload-zone input {
+  position: absolute; inset: 0; opacity: 0;
+  cursor: pointer; width: 100%; height: 100%;
+}
+.upload-zone svg { color: var(--muted); display: inline-block; margin-bottom: 6px; }
+.upload-zone p { font-size: 0.75rem; color: var(--muted); }
+.upload-zone .fname { color: var(--green); font-size: 0.8rem; margin-top: 5px; min-height: 1em; }
+
+/* ── SECTION LABEL ── */
+.sec-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.9rem; letter-spacing: 2px;
+  color: var(--muted); padding: 0 16px; margin-bottom: 10px;
+}
+
+/* ── SCANNER ── */
+.scanner-wrap { padding: 0 16px 16px; }
+.btn-row { display: flex; gap: 10px; margin-bottom: 12px; }
+.btn {
+  flex: 1; padding: 15px 8px;
+  background: none; border: 1px solid var(--border);
+  color: var(--text); font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem; letter-spacing: 1px;
+  cursor: pointer; text-transform: uppercase;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: all .15s; border-radius: 0;
+  -webkit-appearance: none;
+}
+.btn:active { opacity: .7; }
+.btn.primary { background: var(--green); color: #000; border-color: var(--green); font-weight: 700; }
+.btn.stop-btn { border-color: var(--red); color: var(--red); }
+
+/* ── CAMERA ── */
+#cam-wrap {
+  position: relative; background: #000;
+  border: 1px solid var(--border);
+  overflow: hidden; border-radius: 2px;
+  aspect-ratio: 4/3; display: none; margin-bottom: 12px;
+}
+#cam-wrap.on { display: block; }
+#cam-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+#cam-wrap canvas { display: none !important; }
+
+.scan-line {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: var(--green); box-shadow: 0 0 10px var(--green);
+  animation: sweep 1.8s ease-in-out infinite;
+}
+@keyframes sweep {
+  0%,100% { top: 12%; opacity: 1; }
+  50%      { top: 88%; opacity: .7; }
+}
+.corners { position: absolute; inset: 16px; pointer-events: none; }
+.c { position: absolute; width: 22px; height: 22px; border: 3px solid var(--green); }
+.c.tl { top:0;left:0; border-right:0; border-bottom:0; }
+.c.tr { top:0;right:0; border-left:0; border-bottom:0; }
+.c.bl { bottom:0;left:0; border-right:0; border-top:0; }
+.c.br { bottom:0;right:0; border-left:0; border-top:0; }
+
+/* ── MANUAL ── */
+.manual-row { display: flex; gap: 8px; margin-bottom: 0; }
+.manual-row input {
+  flex: 1; background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem; padding: 13px 14px; outline: none;
+  transition: border-color .15s; border-radius: 0; -webkit-appearance: none;
+}
+.manual-row input:focus { border-color: var(--green); }
+.manual-row input::placeholder { color: var(--muted); }
+.manual-row button {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--green); padding: 13px 18px;
+  cursor: pointer; font-size: 1.3rem;
+  transition: all .15s; -webkit-appearance: none;
+}
+.manual-row button:active { background: var(--green); color: #000; }
+
+/* ── RESULT ── */
+#result-box {
+  margin: 14px 16px; padding: 16px 18px;
+  border-left: 4px solid; display: none;
+}
+#result-box.yes { display: block; border-color: var(--green); background: rgba(0,255,136,.07); }
+#result-box.no  { display: block; border-color: var(--red);   background: rgba(255,51,85,.07); }
+#result-box.flash { animation: pop .25s ease; }
+@keyframes pop { 0%{transform:scale(.97);opacity:.5} 100%{transform:scale(1);opacity:1} }
+
+.res-main {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.9rem; letter-spacing: 3px;
+}
+.yes .res-main { color: var(--green); }
+.no  .res-main { color: var(--red); }
+.res-code { font-size: 0.75rem; color: var(--muted); margin-top: 3px; letter-spacing: 1px; }
+
+/* ── HISTORY ── */
+.hist-wrap { padding: 0 16px; }
+.hist-hd {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 10px;
+}
+.hist-clr {
+  font-size: 0.65rem; color: var(--muted); background: none;
+  border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+  -webkit-appearance: none;
+}
+.hist-clr:active { color: var(--red); }
+#hist-list { display: flex; flex-direction: column; gap: 6px; }
+.hi {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; background: var(--surface); border-left: 3px solid;
+  font-size: 0.78rem;
+}
+.hi.yes { border-color: var(--green); }
+.hi.no  { border-color: var(--red); }
+.hi-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.hi.yes .hi-dot { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.hi.no  .hi-dot { background: var(--red);   box-shadow: 0 0 5px var(--red); }
+.hi-code { flex: 1; letter-spacing: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hi-lbl { font-size: 0.68rem; letter-spacing: 1px; flex-shrink: 0; }
+.hi.yes .hi-lbl { color: var(--green); }
+.hi.no  .hi-lbl { color: var(--red); }
+.hi-t { color: var(--muted); font-size: 0.62rem; flex-shrink: 0; }
+.empty { text-align: center; color: var(--muted); font-size: 0.72rem; padding: 28px 0; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-box">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="4" height="8" rx="0.5"/><rect x="10" y="3" width="2" height="8" rx="0.5"/>
+      <rect x="15" y="3" width="6" height="8" rx="0.5"/><rect x="3" y="13" width="6" height="8" rx="0.5"/>
+      <rect x="12" y="13" width="2" height="8" rx="0.5"/><rect x="17" y="13" width="4" height="8" rx="0.5"/>
+    </svg>
+  </div>
+  <h1>BARCODE CHECK</h1>
+  <div class="db-badge">БАЗА: <span id="db-count">0</span></div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div id="install-banner">
+  📲 Safari → Поделиться → «На экран Домой» — добавить как приложение
+</div>
+
+<div class="body-scroll">
+
+  <!-- UPLOAD -->
+  <div class="upload-zone" id="uzone">
+    <input type="file" accept=".xlsx,.xls,.csv" id="file-in">
+    <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+      <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 13V4M8 8l4-4 4 4"/>
+    </svg>
+    <p>Загрузить Excel / CSV со штрих-кодами</p>
+    <div class="fname" id="fname">файл не выбран</div>
+  </div>
+
+  <!-- SCANNER -->
+  <div class="sec-label">// СКАНЕР</div>
+  <div class="scanner-wrap">
+    <div class="btn-row">
+      <button class="btn primary" id="start-btn" onclick="startScan()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/>
+        </svg>
+        Открыть камеру
+      </button>
+      <button class="btn stop-btn" id="stop-btn" style="display:none" onclick="stopScan()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="6" y="6" width="12" height="12" rx="1"/>
+        </svg>
+        Стоп
+      </button>
+    </div>
+
+    <div id="cam-wrap">
+      <div class="scan-line"></div>
+      <div class="corners">
+        <div class="c tl"></div><div class="c tr"></div>
+        <div class="c bl"></div><div class="c br"></div>
+      </div>
+    </div>
+
+    <div class="manual-row">
+      <input type="text" id="minput" placeholder="ввести код вручную..." inputmode="numeric" autocomplete="off">
+      <button onclick="checkManual()">↵</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-box">
+    <div class="res-main" id="res-main"></div>
+    <div class="res-code" id="res-code"></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="hist-wrap">
+    <div class="hist-hd">
+      <div class="sec-label" style="padding:0;margin:0">// ИСТОРИЯ</div>
+      <button class="hist-clr" onclick="clearHist()">очистить</button>
+    </div>
+    <div id="hist-list"><div class="empty">— пусто —</div></div>
+  </div>
+
+</div><!-- end body-scroll -->
+
+<script>
+// ── STATE ──
+let db = new Set();
+let hist = [];
+let scanning = false;
+let lastCode = '', lastTime = 0;
+
+// ── SHOW INSTALL BANNER on iOS Safari ──
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isInStandalone = window.navigator.standalone;
+if (isIOS && !isInStandalone) {
+  document.getElementById('install-banner').style.display = 'block';
+}
+
+// ── FILE UPLOAD ──
+document.getElementById('file-in').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  document.getElementById('fname').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const wb = XLSX.read(new Uint8Array(ev.target.result), { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      db.clear();
+      rows.forEach(row => row.forEach(cell => {
+        const s = String(cell ?? '').trim();
+        if (s) db.add(s);
+      }));
+      document.getElementById('db-count').textContent = db.size;
+      document.getElementById('uzone').classList.add('loaded');
+    } catch(err) {
+      alert('Ошибка файла: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+// ── CHECK ──
+function check(code) {
+  code = String(code).trim();
+  if (!code) return;
+  const now = Date.now();
+  if (code === lastCode && now - lastTime < 2000) return;
+  lastCode = code; lastTime = now;
+
+  const found = db.has(code);
+  showResult(code, found);
+  addHist(code, found);
+  if ('vibrate' in navigator) navigator.vibrate(found ? [120] : [60,60,60]);
+}
+
+function showResult(code, found) {
+  const box = document.getElementById('result-box');
+  box.className = '';
+  void box.offsetWidth;
+  box.className = (found ? 'yes' : 'no') + ' flash';
+  document.getElementById('res-main').textContent = found ? '✓  СКИДКА ЕСТЬ' : '✗  СКИДКИ НЕТ';
+  document.getElementById('res-code').textContent = 'КОД: ' + code;
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function addHist(code, found) {
+  const t = new Date();
+  hist.unshift({ code, found, t: t.toLocaleTimeString('ru', {hour:'2-digit',minute:'2-digit',second:'2-digit'}) });
+  renderHist();
+}
+
+function renderHist() {
+  const el = document.getElementById('hist-list');
+  if (!hist.length) { el.innerHTML = '<div class="empty">— пусто —</div>'; return; }
+  el.innerHTML = hist.slice(0,80).map(h => `
+    <div class="hi ${h.found?'yes':'no'}">
+      <div class="hi-dot"></div>
+      <div class="hi-code">${h.code}</div>
+      <div class="hi-lbl">${h.found?'СКИДКА':'НЕТ'}</div>
+      <div class="hi-t">${h.t}</div>
+    </div>`).join('');
+}
+
+function clearHist() {
+  hist = [];
+  renderHist();
+  const box = document.getElementById('result-box');
+  box.className = '';
+}
+
+// ── MANUAL ──
+function checkManual() {
+  const inp = document.getElementById('minput');
+  check(inp.value);
+  inp.value = '';
+}
+document.getElementById('minput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkManual();
+});
+
+// ── QUAGGA SCANNER ──
+function startScan() {
+  const wrap = document.getElementById('cam-wrap');
+  wrap.classList.add('on');
+  document.getElementById('start-btn').style.display = 'none';
+  document.getElementById('stop-btn').style.display = '';
+
+  Quagga.init({
+    inputStream: {
+      name: 'Live', type: 'LiveStream', target: wrap,
+      constraints: { facingMode: 'environment' }
+    },
+    decoder: {
+      readers: [
+        'ean_reader','ean_8_reader','code_128_reader',
+        'code_39_reader','upc_reader','upc_e_reader',
+        'i2of5_reader','codabar_reader'
+      ],
+      multiple: false
+    },
+    locate: true,
+    frequency: 5
+  }, function(err) {
+    if (err) {
+      alert('Ошибка камеры: ' + (err.message || err));
+      stopScan(); return;
+    }
+    Quagga.start();
+    scanning = true;
+  });
+
+  Quagga.onDetected(function(res) {
+    if (!scanning) return;
+    const code = res.codeResult.code;
+    if (code && res.codeResult.startInfo.error < 0.25) {
+      check(code);
+    }
+  });
+}
+
+function stopScan() {
+  if (scanning) { Quagga.stop(); scanning = false; }
+  document.getElementById('cam-wrap').classList.remove('on');
+  document.getElementById('start-btn').style.display = '';
+  document.getElementById('stop-btn').style.display = 'none';
+}
+</script>
+</body>
+</html>
